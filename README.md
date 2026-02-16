@@ -44,12 +44,7 @@ python generate_image.py \
 
 ### Arguments
 
--   `--api_key`: Your Google Cloud API Key.
--   `--project_id`: Your Google Cloud Project ID (Required for Vertex AI models).
--   `--location`: Google Cloud Region (default: `us-central1`).
 -   `--prompt`: The text description of the image.
--   `--output`: Output filename (default: `generated_image.png`).
--   `--model`: Model version (default: `imagen-3.0-generate-001`).
 
 ## Troubleshooting
 
