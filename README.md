@@ -27,19 +27,14 @@ Run the script with your API Key and other parameters:
 
 ```bash
 python generate_image.py \
-    --api_key "YOUR_API_KEY" \
-    --project_id "YOUR_PROJECT_ID" \
-    --location "us-central1" \
-    --prompt "A futuristic city with flying cars at sunset" \
-    --output "city.png"
+    --prompt "A futuristic city with flying cars at sunset" 
 ```
 
-Alternatively, set the API Key as an environment variable:
+Set the API Key as an environment variable:
 ```bash
-export GOOGLE_API_KEY="YOUR_API_KEY"
-python generate_image.py \
-    --project_id "YOUR_PROJECT_ID" \
-    --prompt "A futuristic city with flying cars at sunset"
+GOOGLE_API_KEY=<API_KEY>
+PROJECT_ID=project_ID
+LOCATION=us-central1
 ```
 
 ### Arguments
