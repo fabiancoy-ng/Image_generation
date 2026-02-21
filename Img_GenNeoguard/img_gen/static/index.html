@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="es">
+<!--
+  Interfaz web para NeoGuard Image Gen.
+  FASE 1: Estructura - Header, tabs (Generar/Editar), dos formularios, área de resultado.
+  FASE 2: Generar - Proveedor, modelo, prompt. Envía a POST /generation/{provider}.
+  FASE 3: Editar - Input múltiple de archivos, modelo, prompt. Envía a POST /generation/openai/edit.
+  FASE 4: Resultado - Muestra texto o imagen según la respuesta. La imagen viene en base64.
+-->
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NeoGuard Image Gen - Premium Interface</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- Blobs animados de fondo (efecto glassmorphism) -->
+    <div class="background-blobs">
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+    </div>
+
+    <main class="container">
+        <header class="header">
+            <h1>NeoGuard <span>AI Generator</span></h1>
+            <p>Genera imágenes y texto con tecnología de vanguardia.</p>
+        </header>
+
+        <!-- Tabs para alternar entre generación y edición -->
+        <nav class="mode-tabs">
+            <button type="button" class="tab-btn active" data-mode="generate">Generar</button>
+            <button type="button" class="tab-btn" data-mode="edit">Editar imagen</button>
+        </nav>
+
+        <!-- Formulario de generación: proveedor + modelo + prompt -->
+        <section class="generator-card" id="generate-section">
+            <form id="generation-form">
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label for="provider">Proveedor</label>
+                        <select id="provider" name="provider" required>
+                            <option value="" disabled selected>Selecciona un proveedor</option>
+                            <option value="openai">OpenAI</option>
+                            <option value="gemini">Gemini</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="model">Modelo</label>
+                        <select id="model" name="model" required disabled>
+                            <option value="" disabled selected>Primero elige proveedor</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="form-group full-width">
+                    <label for="prompt">Tu Idea</label>
+                    <textarea id="prompt" name="prompt" placeholder="Describe lo que quieres generar..." required rows="4"></textarea>
+                </div>
+
+                <div class="form-group full-width context-options">
+                    <label>Contexto (solo texto)</label>
+                    <div class="context-row">
+                        <input type="text" id="conversation-id" name="conversation_id" placeholder="ID conversación (opcional)">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="use-summary-context" name="use_summary_context">
+                            Usar resumen en vez de historial completo
+                        </label>
+                    </div>
+                    <small>Con ID: mantiene historial. Sin ID: petición independiente.</small>
+                </div>
+
+                <button type="submit" id="generate-btn" class="primary-btn">
+                    <span class="btn-text">Generar</span>
+                    <div class="loader-dots" style="display: none;">
+                        <span></span><span></span><span></span>
+                    </div>
+                </button>
+            </form>
+        </section>
+
+        <!-- Formulario de edición: archivos + modelo + instrucción -->
+        <section class="generator-card" id="edit-section" style="display: none;">
+            <form id="edit-form">
+                <p class="format-hint" id="format-hint">Formatos permitidos: PNG, JPEG, GIF, WEBP (1-16 imágenes)</p>
+                <div class="form-group">
+                    <label for="edit-images">Imágenes a editar</label>
+                    <input type="file" id="edit-images" name="images" accept=".png,.jpg,.jpeg,.gif,.webp" multiple required>
+                    <small id="edit-files-count"></small>
+                </div>
+                <div class="form-group">
+                    <label for="edit-model">Modelo</label>
+                    <select id="edit-model" name="model" required>
+                        <option value="" disabled selected>Selecciona modelo</option>
+                    </select>
+                </div>
+                <div class="form-group full-width">
+                    <label for="edit-prompt">Instrucción de edición</label>
+                    <textarea id="edit-prompt" name="prompt" placeholder="Describe cómo quieres modificar la(s) imagen(es)..." required rows="4"></textarea>
+                </div>
+                <button type="submit" id="edit-btn" class="primary-btn">
+                    <span class="btn-text">Editar</span>
+                    <div class="loader-dots" style="display: none;">
+                        <span></span><span></span><span></span>
+                    </div>
+                </button>
+            </form>
+        </section>
+
+        <!-- Área de resultado: texto o imagen según la respuesta de la API -->
+        <section id="result-section" class="result-container" style="display: none;">
+            <div class="result-header">
+                <h3>Resultado</h3>
+                <span id="model-tag" class="badge"></span>
+            </div>
+            <div id="result-content" class="result-body">
+                <!-- El contenido se cargará aquí (texto o imagen) -->
+            </div>
+        </section>
+    </main>
+
+    <script src="app.js"></script>
+</body>
+</html>
