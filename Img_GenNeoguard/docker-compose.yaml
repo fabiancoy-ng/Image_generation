@@ -1,0 +1,39 @@
+version: '3.7'
+
+services:
+
+  api:
+    build:
+      context: img_gen
+      dockerfile: Dockerfile
+    container_name: img_gen_api
+    ports:
+      - '8000:8000'
+    volumes:
+      - ./img_gen/:/app
+    env_file:
+      - ./img_gen/.env
+    restart: always
+
+  jupyter:
+    image: jupyter/scipy-notebook:latest
+    container_name: neoguard_jupyter
+    ports:
+      - "8888:8888"
+    volumes:
+      - ./notebooks:/home/jovyan/work
+    environment:
+      - JUPYTER_ENABLE_LAB=yes
+    restart: always
+
+  redis:
+    image: redis:latest
+    expose:
+      - 6379
+    healthcheck:
+      test: [ "CMD", "redis-cli", "ping" ]
+      interval: 10s
+      timeout: 30s
+      retries: 50
+      start_period: 30s
+    restart: always
